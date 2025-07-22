@@ -1,6 +1,5 @@
 import os
 import time
-
 import tweepy
 
 class TwitterAPI:
@@ -8,15 +7,15 @@ class TwitterAPI:
     Class for accessing the Twitter API.
 
     Requires API credentials to be available in environment
-    variables. These will be set appropriately if the bot was created
-    with init.sh included with the heroku-twitterbot-starter
+    variables set on Render or locally.
     """
     def __init__(self):
-        consumer_key = os.environ.get('TWITTER_CONSUMER_KEY')
-        consumer_secret = os.environ.get('TWITTER_CONSUMER_SECRET')
+        consumer_key = os.environ.get('CONSUMER_KEY')
+        consumer_secret = os.environ.get('CONSUMER_SECRET')
+        access_token = os.environ.get('ACCESS_TOKEN')
+        access_token_secret = os.environ.get('ACCESS_TOKEN_SECRET')
+
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-        access_token = os.environ.get('TWITTER_ACCESS_TOKEN')
-        access_token_secret = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
         auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(auth)
 
@@ -26,7 +25,7 @@ class TwitterAPI:
 
 if __name__ == "__main__":
     twitter = TwitterAPI()
-    twitter.tweet("Hello world!") #You probably want to remove this line
+    twitter.tweet("Hello world!")  # You probably want to remove this line later
     while True:
         #Send a tweet here!
         time.sleep(60)
