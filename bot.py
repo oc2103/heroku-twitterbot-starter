@@ -1,17 +1,21 @@
 import os
-import requests
+import tweepy
 
-BEARER_TOKEN = os.getenv("BEARER_TOKEN")
+# Load secrets
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
-def create_headers(token):
-    return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+# Authenticate
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
 
-def tweet(message):
-    url = "https://api.twitter.com/2/tweets"
-    payload = {"text": message}
-    headers = create_headers(BEARER_TOKEN)
-    response = requests.post(url, headers=headers, json=payload)
-    print(response.status_code, response.text)
+api = tweepy.API(auth)
 
-if __name__ == "__main__":
-    tweet("Hello world from v2 API!")
+# Send tweet
+try:
+    api.update_status("Hello world from tweepy OAuth 1.0a!")
+    print("Tweet sent successfully.")
+except Exception as e:
+    print("Error tweeting:", e)
