@@ -1,31 +1,17 @@
 import os
-import time
-import tweepy
+import requests
 
-class TwitterAPI:
-    """
-    Class for accessing the Twitter API.
+BEARER_TOKEN = os.getenv("BEARER_TOKEN")
 
-    Requires API credentials to be available in environment
-    variables set on Render or locally.
-    """
-    def __init__(self):
-        consumer_key = os.environ.get('CONSUMER_KEY')
-        consumer_secret = os.environ.get('CONSUMER_SECRET')
-        access_token = os.environ.get('ACCESS_TOKEN')
-        access_token_secret = os.environ.get('ACCESS_TOKEN_SECRET')
+def create_headers(token):
+    return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
-        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-        auth.set_access_token(access_token, access_token_secret)
-        self.api = tweepy.API(auth)
-
-    def tweet(self, message):
-        """Send a tweet"""
-        self.api.update_status(status=message)
+def tweet(message):
+    url = "https://api.twitter.com/2/tweets"
+    payload = {"text": message}
+    headers = create_headers(BEARER_TOKEN)
+    response = requests.post(url, headers=headers, json=payload)
+    print(response.status_code, response.text)
 
 if __name__ == "__main__":
-    twitter = TwitterAPI()
-    twitter.tweet("Hello world!")  # You probably want to remove this line later
-    while True:
-        #Send a tweet here!
-        time.sleep(60)
+    tweet("Hello world from v2 API!")
